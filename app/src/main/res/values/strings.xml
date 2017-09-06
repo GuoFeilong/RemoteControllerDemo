@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">RemoteControllerDemo</string>
+    <string name="action_settings">Settings</string>
+</resources>

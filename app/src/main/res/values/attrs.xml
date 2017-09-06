@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RemoteControllerView">
+        <attr name="rcv_text_color" format="color" />
+        <attr name="rcv_shadow_color" format="color" />
+        <attr name="rcv_stroke_color" format="color" />
+        <attr name="rcv_stroke_width" format="dimension" />
+        <attr name="rcv_text_size" format="dimension" />
+        <attr name="rcv_oval_degree" format="integer" />
+    </declare-styleable>
+</resources>
