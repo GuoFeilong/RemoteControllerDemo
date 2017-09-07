@@ -103,6 +103,7 @@ public class RemoteControllerView extends View {
             // 计算扇形的开始角度,这里不能用canvas旋转的方法
             // 因为设计到扇形点击,如果画布旋转,会因为角度问题,导致感官上看上去点击错乱的问题,
             // 其实点击的区域是正确的,就是因为旋转角度导致的,注意,
+
             // 这块需要一个n的公式,本人没学历不会总结通用公式.....
             switch (i) {
                 case 0:
@@ -134,6 +135,22 @@ public class RemoteControllerView extends View {
             ovalRegions.add(tempRegin);
             ovalPaints.add(creatPaint(Color.WHITE, 0, Paint.Style.FILL, 0));
         }
+
+        Region smallCircleRegion = new Region();
+        Path smallCirclePath = new Path();
+        smallCirclePath.moveTo(0, 0);
+        smallCirclePath.lineTo(Math.min(rcvViewWidth, rcvViewHeight) * SCALE_OF_SMALL_CIRCLE / 2, 0);
+        smallCirclePath.addCircle(0, 0, Math.min(rcvViewWidth, rcvViewHeight) * SCALE_OF_SMALL_CIRCLE / 2, Path.Direction.CW);
+        smallCirclePath.lineTo(0, 0);
+        smallCirclePath.close();
+        RectF tempRectF = new RectF();
+        smallCirclePath.computeBounds(tempRectF, true);
+        smallCircleRegion.setPath(smallCirclePath, new Region((int) tempRectF.left, (int) tempRectF.top, (int) tempRectF.right, (int) tempRectF.bottom));
+
+        ovalPaths.add(smallCirclePath);
+        ovalRegions.add(smallCircleRegion);
+        ovalPaints.add(creatPaint(Color.WHITE, 0, Paint.Style.FILL, 0));
+
     }
 
     @Override
@@ -164,7 +181,6 @@ public class RemoteControllerView extends View {
         for (int i = 0; i < ovalRegions.size(); i++) {
             canvas.drawPath(ovalPaths.get(i), ovalPaints.get(i));
         }
-        canvas.drawCircle(0, 0, Math.min(rcvViewWidth, rcvViewHeight) * SCALE_OF_SMALL_CIRCLE / 2, rcvWhitePaint);
         canvas.drawCircle(0, 0, Math.min(rcvViewWidth, rcvViewHeight) * SCALE_OF_SMALL_CIRCLE / 2, rcvStrokePaint);
         canvas.drawText("OK", textPointInView.x, textPointInView.y, rcvTextPaint);
     }
@@ -214,17 +230,14 @@ public class RemoteControllerView extends View {
                 case 3:
                     remoteControllerClickListener.topClick();
                     break;
+                case 4:
+                    remoteControllerClickListener.centerOkClick();
+                    break;
             }
         }
     }
 
-    /**
-     * 初始化属性
-     *
-     * @param context      上线文
-     * @param attrs        自定义属性
-     * @param defStyleAttr 默认属性
-     */
+
     private void initAttribute(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.RemoteControllerView, defStyleAttr, R.style.def_remote_controller);
         int indexCount = typedArray.getIndexCount();
@@ -256,9 +269,7 @@ public class RemoteControllerView extends View {
         typedArray.recycle();
     }
 
-    /**
-     * 初始化画笔
-     */
+
     private void initPaints() {
         rcvTextPaint = creatPaint(rcvTextColor, rcvTextSize, Paint.Style.FILL, 0);
         rcvShadowPaint = creatPaint(rcvShadowColor, 0, Paint.Style.FILL, 0);
@@ -266,15 +277,7 @@ public class RemoteControllerView extends View {
         rcvWhitePaint = creatPaint(Color.WHITE, 0, Paint.Style.FILL, 0);
     }
 
-    /**
-     * 构造画笔
-     *
-     * @param paintColor 画笔颜色
-     * @param textSize   字体大小
-     * @param style      风格
-     * @param lineWidth  线宽
-     * @return 画笔
-     */
+
     private Paint creatPaint(int paintColor, int textSize, Paint.Style style, int lineWidth) {
         Paint paint = new Paint();
         paint.setColor(paintColor);
@@ -313,6 +316,8 @@ public class RemoteControllerView extends View {
         void rightClick();
 
         void bottomClick();
+
+        void centerOkClick();
     }
 
     public void setRemoteControllerClickListener(OnRemoteControllerClickListener remoteControllerClickListener) {

@@ -49,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
             public void bottomClick() {
                 Toast.makeText(MainActivity.this, "bottomClick", Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void centerOkClick() {
+                Toast.makeText(MainActivity.this, "centerOkClick", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
